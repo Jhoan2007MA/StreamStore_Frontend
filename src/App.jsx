@@ -3,9 +3,11 @@ import Layout from "./components/layout/Layout"
 import RutaProtegida from "./components/RutaProtegida"
 import Carrito from "./pages/Carrito"
 import Catalogo from "./pages/Catalogo"
+import Checkout from "./pages/Checkout"
 import EnConstruccion from "./pages/EnConstruccion"
 import Landing from "./pages/Landing"
 import Login from "./pages/Login"
+import MiCuenta from "./pages/MiCuenta"
 import NoEncontrada from "./pages/NoEncontrada"
 import ProductoDetalle from "./pages/ProductoDetalle"
 import Registro from "./pages/Registro"
@@ -25,8 +27,8 @@ export default function App() {
         {/* Solo clientes con sesión */}
         <Route element={<RutaProtegida rol="cliente" />}>
           <Route path="/carrito" element={<Carrito />} />
-          <Route path="/checkout" element={<EnConstruccion titulo="Checkout y pago" />} />
-          <Route path="/mi-cuenta" element={<EnConstruccion titulo="Mi cuenta" />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/mi-cuenta" element={<MiCuenta />} />
         </Route>
 
         {/* Solo administradores */}
