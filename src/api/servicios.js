@@ -29,3 +29,17 @@ export const carritoApi = {
   vaciar: () => datos(api.delete("/carrito")),
   renovar: (servicioId) => datos(api.post("/carrito/renovaciones", { servicioId }))
 }
+
+export const comprasApi = {
+  // Paso 1: crea la compra "pendiente" con lo que hay en el carrito
+  checkout: () => datos(api.post("/compras")),
+  // Paso 2: pago simulado. metodoPago = "tarjeta" | "pse" | "nequi"
+  pagar: (compraId, metodoPago) => datos(api.post(`/compras/${compraId}/pagar`, { metodoPago })),
+  // Historial paginado: devuelve { data: [...], currentPage, totalPages, ... }
+  mias: (page = 1) => datos(api.get("/compras/mias", { params: { page, limit: 10 } })),
+  detalle: (id) => datos(api.get(`/compras/${id}`))
+}
+
+export const serviciosApi = {
+  mios: () => datos(api.get("/servicios/mios"))
+}
