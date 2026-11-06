@@ -246,8 +246,10 @@ function Hero() {
     <section className="relative isolate flex h-[100svh] min-h-[620px] items-end overflow-hidden">
       {/* Parallax: la imagen baja más despacio que la página (0.3 de la velocidad) */}
       <div aria-hidden="true" className="absolute inset-0 -z-10" style={{ transform: `translate3d(0, ${scrollY * 0.3}px, 0)` }}>
-        {/* Zoom lento de entrada: empieza en 112% y termina en 100% durante 20 s */}
-        <div className="absolute inset-0 animate-zoom-lento bg-[url('/fondo.jpg')] bg-cover bg-center" />
+        {/* Zoom lento de entrada (112% → 100% en 20 s) + deriva diagonal infinita del fondo */}
+        <div className="absolute inset-0 animate-zoom-lento">
+          <div className="absolute inset-0 animate-deriva bg-[url('/fondo-plataformas.png')] bg-cover bg-center will-change-transform" />
+        </div>
       </div>
       {/* Degradados de lectura: oscurecen abajo (texto) y un poco arriba (encabezado).
           El radial es una "sombra" ovalada detrás del texto: la imagen es muy cargada y sin ella el título se pierde */}

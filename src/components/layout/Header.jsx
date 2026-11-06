@@ -29,8 +29,9 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-40 transition-all duration-700 ease-lujo ${
-          transparente ? "bg-transparent" : "border-b border-white/[0.06] bg-fondo/70 backdrop-blur-xl"
+        className={`fixed inset-x-0 top-0 z-40 border-b transition-all duration-700 ease-lujo ${
+          // Línea recta y semitransparente que separa el encabezado del fondo, también en la portada
+          transparente ? "border-white/15 bg-transparent" : "border-white/[0.06] bg-fondo/70 backdrop-blur-xl"
         }`}
       >
         <div className="contenedor grid h-20 grid-cols-[1fr_auto_1fr] items-center">
