@@ -43,3 +43,31 @@ export const comprasApi = {
 export const serviciosApi = {
   mios: () => datos(api.get("/servicios/mios"))
 }
+
+// Panel de administración. Los listados vienen paginados: { data: [...], currentPage, totalPages, total, ... }
+// estado de plataformas y productos: 1 = activo, 0 = inactivo
+export const adminApi = {
+  resumen: () => datos(api.get("/admin/resumen")),
+  ejecutarAlertas: () => datos(api.post("/admin/cron/ejecutar")),
+
+  cuentas: (filtros = {}) => datos(api.get("/admin/cuentas", { params: sinVacios(filtros) })),
+  crearCuenta: (cuenta) => datos(api.post("/admin/cuentas", cuenta)),
+
+  plataformas: (filtros = {}) => datos(api.get("/admin/plataformas", { params: sinVacios(filtros) })),
+  crearPlataforma: (plataforma) => datos(api.post("/admin/plataformas", plataforma)),
+  editarPlataforma: (id, cambios) => datos(api.patch(`/admin/plataformas/${id}`, cambios)),
+  estadoPlataforma: (id, estado) => datos(api.patch(`/admin/plataformas/${id}/estado`, { estado })),
+
+  productos: (filtros = {}) => datos(api.get("/admin/productos", { params: sinVacios(filtros) })),
+  crearProducto: (producto) => datos(api.post("/admin/productos", producto)),
+  editarProducto: (id, cambios) => datos(api.patch(`/admin/productos/${id}`, cambios)),
+  estadoProducto: (id, estado) => datos(api.patch(`/admin/productos/${id}/estado`, { estado })),
+
+  compras: (filtros = {}) => datos(api.get("/admin/compras", { params: sinVacios(filtros) })),
+  compra: (id) => datos(api.get(`/admin/compras/${id}`))
+}
+
+// Quita los filtros vacíos para no mandar ?estado=&plataforma= al backend
+function sinVacios(filtros) {
+  return Object.fromEntries(Object.entries(filtros).filter(([, valor]) => valor !== "" && valor !== null && valor !== undefined))
+}

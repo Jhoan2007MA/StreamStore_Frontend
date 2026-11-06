@@ -8,7 +8,15 @@ const ESTADOS = {
   // Compras
   pagada: { texto: "Pagada", punto: "bg-emerald-400" },
   pendiente: { texto: "Pendiente", punto: "bg-amber-400" },
-  cancelada: { texto: "Cancelada", punto: "bg-zinc-500" }
+  cancelada: { texto: "Cancelada", punto: "bg-zinc-500" },
+  // Inventario (cuentas y pantallas)
+  disponible: { texto: "Disponible", punto: "bg-emerald-400" },
+  parcial: { texto: "Parcial", punto: "bg-amber-400" },
+  vendida: { texto: "Vendida", punto: "bg-red-400" },
+  inactiva: { texto: "Inactiva", punto: "bg-zinc-500" },
+  // Plataformas y productos (estado 1 / 0)
+  habilitado: { texto: "Activo", punto: "bg-emerald-400" },
+  deshabilitado: { texto: "Inactivo", punto: "bg-zinc-500" }
 }
 
 export default function EstadoBadge({ estado }) {
