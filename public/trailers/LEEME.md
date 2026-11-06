@@ -11,3 +11,7 @@ Ponga aquí un archivo por tarjeta con estos nombres exactos:
 Recomendado: MP4 (H.264), 10–20 segundos, 720p, menos de 5 MB. El sonido se silencia siempre.
 La tarjeta es vertical: se ve el centro del video y se recortan los lados.
 Si falta un archivo, la tarjeta sigue mostrando la imagen de siempre.
+
+Bloque final (video con el botón "Explorar la colección"):
+
+- cierre.mp4               → tráiler de Interestelar, video de fondo que se reproduce solo.

@@ -222,10 +222,17 @@ export default function Landing() {
 
       {/* ================= CIERRE ================= */}
       <section className="contenedor pt-8">
-        <VisualPlataforma nombre="Prime Video" conLogo={false} zoom="160%" className="flex min-h-[420px] flex-col items-center justify-center rounded-2xl px-6 py-20 text-center">
-          <p className="etiqueta">SH Vision</p>
-          <h2 className="titulo-display mt-5 max-w-2xl text-4xl sm:text-6xl">Su próxima historia comienza aquí</h2>
-          <Link to="/catalogo" className="boton-primario mt-10">Explorar la colección</Link>
+        {/* Video de fondo que se reproduce solo (public/trailers/cierre.mp4). Si no existe, queda la imagen.
+            Encima solo va el botón, abajo al centro, para no tapar la escena */}
+        <VisualPlataforma
+          nombre="Prime Video"
+          conLogo={false}
+          zoom="160%"
+          video="/trailers/cierre.mp4"
+          videoSiempre
+          className="flex min-h-[420px] flex-col items-center justify-end rounded-2xl px-6 pb-8 text-center sm:pb-10"
+        >
+          <Link to="/catalogo" className="boton-primario">Explorar la colección</Link>
         </VisualPlataforma>
       </section>
     </>
