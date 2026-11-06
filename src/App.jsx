@@ -4,7 +4,12 @@ import RutaProtegida from "./components/RutaProtegida"
 import Carrito from "./pages/Carrito"
 import Catalogo from "./pages/Catalogo"
 import Checkout from "./pages/Checkout"
-import EnConstruccion from "./pages/EnConstruccion"
+import AdminLayout from "./pages/admin/AdminLayout"
+import Inventario from "./pages/admin/Inventario"
+import Plataformas from "./pages/admin/Plataformas"
+import Productos from "./pages/admin/Productos"
+import Resumen from "./pages/admin/Resumen"
+import Ventas from "./pages/admin/Ventas"
 import Landing from "./pages/Landing"
 import Login from "./pages/Login"
 import MiCuenta from "./pages/MiCuenta"
@@ -33,7 +38,13 @@ export default function App() {
 
         {/* Solo administradores */}
         <Route element={<RutaProtegida rol="admin" />}>
-          <Route path="/admin" element={<EnConstruccion titulo="Panel de administración" />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Resumen />} />
+            <Route path="inventario" element={<Inventario />} />
+            <Route path="plataformas" element={<Plataformas />} />
+            <Route path="productos" element={<Productos />} />
+            <Route path="ventas" element={<Ventas />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<NoEncontrada />} />
