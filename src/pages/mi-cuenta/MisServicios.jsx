@@ -7,6 +7,8 @@ import Aviso from "../../components/Aviso"
 import BotonCopiar from "../../components/BotonCopiar"
 import Cargando from "../../components/Cargando"
 import EstadoBadge from "../../components/EstadoBadge"
+import FlechasCarrusel from "../../components/FlechasCarrusel"
+import { usePistaHorizontal } from "../../hooks/usePistaHorizontal"
 import PlataformaLogo from "../../components/PlataformaLogo"
 import { useCarrito } from "../../context/CarritoContext"
 import { formatoFecha, nombreModalidad } from "../../utils/formato"
@@ -22,6 +24,8 @@ export default function MisServicios() {
   const [servicios, setServicios] = useState(null) // null = todavía cargando
   const [error, setError] = useState("")
   const [filtro, setFiltro] = useState("")
+  // Carrusel: se vuelve a medir cuando llegan los servicios o cambia el filtro
+  const { pista, mover, alInicio, alFinal } = usePistaHorizontal([servicios, filtro])
 
   useEffect(() => {
     serviciosApi.mios()
@@ -37,7 +41,7 @@ export default function MisServicios() {
       <div className="py-16 text-center">
         <Tv size={44} className="mx-auto text-zinc-600" />
         <p className="mt-4 text-zinc-400">Todavía no tienes servicios.</p>
-        <Link to="/catalogo" className="mt-6 inline-block rounded-xl bg-brand px-6 py-3 font-semibold hover:bg-brand-dark">Ir al catálogo</Link>
+        <Link to="/catalogo" className="mt-8 boton-primario">Descubra la colección</Link>
       </div>
     )
   }
@@ -48,27 +52,45 @@ export default function MisServicios() {
 
   return (
     <>
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {FILTROS.map((f) => (
-          <button
-            key={f.valor}
-            onClick={() => setFiltro(f.valor)}
-            className={`whitespace-nowrap rounded-full border px-4 py-1.5 text-sm ${filtro === f.valor ? "border-brand bg-brand" : "border-borde text-zinc-300"}`}
-          >
-            {f.texto} ({contar(f.valor)})
-          </button>
+      {/* Filtros a la izquierda y flechas del carrusel a la derecha */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none]">
+          {FILTROS.map((f) => (
+            <button
+              key={f.valor}
+              onClick={() => setFiltro(f.valor)}
+              className={`whitespace-nowrap rounded-full border px-4 py-1.5 text-sm ${filtro === f.valor ? "border-brand/60 bg-brand/10 text-tinta" : "border-white/10 text-zinc-400 hover:text-tinta"}`}
+            >
+              {f.texto} ({contar(f.valor)})
+            </button>
+          ))}
+        </div>
+        <FlechasCarrusel mover={mover} alInicio={alInicio} alFinal={alFinal} className="hidden shrink-0 md:flex" />
+      </div>
+
+      {/* CARRUSEL HORIZONTAL: cada tarjeta ocupa ~85% en celular y la mitad en pantallas grandes.
+          Se desliza con el dedo, con la rueda del mouse + Shift o con las flechas */}
+      <div
+        ref={pista}
+        className="-mx-5 mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-5 pb-4 [scrollbar-width:none] sm:-mx-8 sm:gap-6 sm:px-8 lg:mx-0 lg:px-0 [&::-webkit-scrollbar]:hidden"
+      >
+        {visibles.map((servicio) => (
+          <div key={servicio.id} className="flex w-[85%] shrink-0 snap-start sm:w-[60%] lg:w-[calc((100%-1.5rem)/2)]">
+            <TarjetaServicio servicio={servicio} />
+          </div>
         ))}
       </div>
-      <div className="mt-5 grid gap-4 md:grid-cols-2">
-        {visibles.map((servicio) => <TarjetaServicio key={servicio.id} servicio={servicio} />)}
-      </div>
+      {visibles.length > 1 && (
+        <p className="mt-2 text-center text-xs text-zinc-500 md:hidden">Deslice para ver sus {visibles.length} servicios</p>
+      )}
       {visibles.length === 0 && <p className="py-10 text-center text-zinc-400">No hay servicios en este estado.</p>}
     </>
   )
 }
 
-// Color de la barra de días restantes según el estado
-const COLOR_BARRA = { activo: "bg-emerald-500", por_vencer: "bg-amber-500", vencido: "bg-red-500" }
+// Color de la barra de días restantes según el estado.
+// Tonos apagados (con transparencia) para que no compitan con el resto del diseño
+const COLOR_BARRA = { activo: "bg-emerald-500/45", por_vencer: "bg-amber-400/60", vencido: "bg-red-400/50" }
 
 function TarjetaServicio({ servicio }) {
   const { plataforma, producto, credenciales, estado, diasRestantes } = servicio
@@ -109,13 +131,13 @@ function TarjetaServicio({ servicio }) {
     `${diasRestantes} día${diasRestantes === 1 ? "" : "s"} restante${diasRestantes === 1 ? "" : "s"}`
 
   return (
-    <article className={`flex flex-col gap-4 rounded-2xl border bg-panel p-5 ${estado === "por_vencer" ? "border-amber-500/50" : "border-borde"}`}>
+    <article className={`flex w-full flex-col gap-4 rounded-2xl border bg-panel p-5 ${estado === "por_vencer" ? "border-amber-500/40" : "border-borde"}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <PlataformaLogo nombre={plataforma.nombre} logoUrl={plataforma.logoUrl} />
           <div>
             <h3 className="font-semibold">{plataforma.nombre}</h3>
-            <p className="text-sm text-violet-300">{nombreModalidad(producto.tipo)}</p>
+            <p className="text-sm text-brand">{nombreModalidad(producto.tipo)}</p>
           </div>
         </div>
         <EstadoBadge estado={estado} />
@@ -159,7 +181,7 @@ function TarjetaServicio({ servicio }) {
       <div className="mt-auto flex items-center justify-between gap-3 border-t border-borde pt-4 text-sm">
         <BotonCopiar texto={todo} etiqueta="Copiar credenciales" />
         {servicio.renovable && (
-          <button onClick={renovarServicio} disabled={renovando} className="flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 font-semibold hover:bg-brand-dark disabled:opacity-60">
+          <button onClick={renovarServicio} disabled={renovando} className="flex items-center gap-1.5 boton-secundario px-4 py-2 text-xs">
             <RefreshCw size={14} /> {renovando ? "..." : "Renovar"}
           </button>
         )}

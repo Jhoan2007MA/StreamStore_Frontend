@@ -1,15 +1,113 @@
 @import "tailwindcss";
 
-/* Colores propios de la marca. Tailwind crea clases como bg-brand, text-brand, etc. */
+/* =========================================================
+   SISTEMA DE DISEÑO · SH VISION
+   Paleta: negro profundo + blanco puro + grises neutros
+   y UN solo acento: dorado champán (se usa poco, por eso se nota).
+   Tailwind crea clases a partir de estas variables:
+   --color-brand → bg-brand, text-brand, border-brand...
+   ========================================================= */
 @theme {
-  --color-brand: #7c5cff;
-  --color-brand-dark: #5b3fe0;
-  --color-fondo: #0d0b14;
-  --color-panel: #17141f;
-  --color-borde: #2a2536;
+  /* Colores */
+  --color-brand: #c9a96e;        /* dorado champán: acentos, etiquetas, detalles */
+  --color-brand-dark: #a8894f;
+  --color-fondo: #0a0a0a;        /* negro profundo de la página */
+  --color-panel: #121212;        /* superficies (tarjetas, formularios) */
+  --color-borde: #242424;        /* líneas finas */
+  --color-tinta: #f5f5f4;        /* texto principal (blanco cálido, cansa menos que #fff) */
+  --color-suave: #a3a3a3;        /* texto secundario */
+
+  /* Tipografía: Inter (neo-grotesca, muy legible) */
+  --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* Curva de animación "de lujo": arranca rápido y frena muy suave */
+  --ease-lujo: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Animaciones */
+  --animate-zoom-lento: zoom-lento 20s var(--ease-lujo) both;
+  --animate-aparecer: aparecer 1.2s var(--ease-lujo) both;
+
+  @keyframes zoom-lento {
+    from { transform: scale(1.12); }
+    to { transform: scale(1); }
+  }
+  @keyframes aparecer {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  @apply bg-fondo text-zinc-100 antialiased;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  @apply bg-fondo font-sans text-tinta antialiased;
+  font-feature-settings: "cv11", "ss01"; /* variantes más limpias de Inter */
+}
+
+::selection {
+  @apply bg-brand text-black;
+}
+
+/* =========================================================
+   PIEZAS REUTILIZABLES
+   Se usan como className="boton-primario", etc.
+   ========================================================= */
+@layer components {
+  /* Micro-etiqueta en mayúsculas con letras separadas (va encima de los títulos) */
+  .etiqueta {
+    @apply text-[0.6875rem] font-medium uppercase tracking-[0.3em] text-brand;
+  }
+
+  /* Títulos grandes: livianos (font-light) y apretados. El lujo no grita. */
+  .titulo-display {
+    @apply font-light leading-[1.05] tracking-tight text-tinta;
+  }
+
+  /* Ancho máximo y márgenes laterales de todas las secciones */
+  .contenedor {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12;
+  }
+
+  /* Botón principal: píldora blanca, texto negro. Sobrio, sin colores chillones */
+  .boton-primario {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-tinta px-7 py-3.5 text-sm font-medium tracking-wide text-black
+      transition duration-500 ease-lujo hover:bg-white hover:shadow-[0_8px_30px_rgba(255,255,255,0.12)]
+      disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-500 disabled:shadow-none;
+  }
+
+  /* Botón secundario: solo borde fino */
+  .boton-secundario {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-sm font-medium tracking-wide text-tinta
+      transition duration-500 ease-lujo hover:border-white/70 hover:bg-white/5
+      disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  /* Enlace con línea inferior que crece de izquierda a derecha al pasar el mouse */
+  .enlace-linea {
+    @apply relative inline-flex items-center gap-2 pb-1 text-sm tracking-wide
+      after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-current
+      after:transition-transform after:duration-500 after:ease-lujo hover:after:scale-x-100;
+  }
+
+  /* Superficie de tarjeta: borde casi invisible y sombra volumétrica muy suave */
+  .superficie {
+    @apply rounded-2xl border border-white/[0.06] bg-panel shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_20px_40px_-20px_rgba(0,0,0,0.6)];
+  }
+
+  /* Campo de formulario minimalista */
+  .campo {
+    @apply w-full rounded-lg border border-borde bg-black/40 px-4 py-3 text-tinta outline-none transition duration-300
+      placeholder:text-zinc-600 focus:border-brand/70 focus:bg-black/60;
+  }
+}
+
+/* Si el usuario pidió "reducir movimiento" en su sistema, apagamos animaciones */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

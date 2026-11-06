@@ -46,13 +46,13 @@ export default function Login() {
         <Aviso tipo="error">{error}</Aviso>
         <CampoTexto etiqueta="Correo" name="correo" type="email" autoComplete="email" value={form.correo} onChange={cambiar} />
         <CampoTexto etiqueta="Contraseña" name="contrasena" type="password" autoComplete="current-password" value={form.contrasena} onChange={cambiar} />
-        <button disabled={enviando} className="w-full rounded-xl bg-brand py-3 font-semibold hover:bg-brand-dark disabled:opacity-60">
+        <button disabled={enviando} className="boton-primario w-full">
           {enviando ? "Entrando..." : "Entrar"}
         </button>
       </form>
       <p className="mt-6 text-center text-sm text-zinc-400">
         ¿No tienes cuenta?{" "}
-        <Link to="/registro" state={{ desde }} className="font-semibold text-brand hover:underline">Regístrate</Link>
+        <Link to="/registro" state={{ desde }} className="enlace-linea text-brand">Regístrate</Link>
       </p>
     </TarjetaFormulario>
   )

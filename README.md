@@ -1,6 +1,6 @@
-# StreamStore · Frontend
+# SH Vision · Frontend
 
-Tienda web de cuentas y pantallas de streaming. Frontend en **React + Vite + Tailwind CSS**.
+Tienda web (reto StreamStore) de cuentas y pantallas de streaming. Frontend en **React + Vite + Tailwind CSS**.
 El backend (Node + Express + MySQL) está en otro repositorio y debe estar corriendo en `http://localhost:3000`.
 
 ## Instalación

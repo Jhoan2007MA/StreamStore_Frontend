@@ -1,89 +1,80 @@
-import { LayoutDashboard, LogOut, Menu, ShoppingCart, User, X } from "lucide-react"
-import { useState } from "react"
-import { Link, NavLink, useNavigate } from "react-router-dom"
+import { LayoutDashboard, Search, ShoppingBag, User } from "lucide-react"
+import { useCallback, useEffect, useState } from "react"
+import { Link, useLocation } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { useCarrito } from "../../context/CarritoContext"
+import { useScrollY } from "../../hooks/useScrollY"
 import Logo from "./Logo"
+import MenuPantallaCompleta from "./MenuPantallaCompleta"
 
-// Encabezado que aparece en todas las páginas: logo, menú, carrito con contador y acceso a la cuenta.
+// Encabezado fijo en 3 columnas: [Menú] [Logo centrado] [Buscar · Cuenta · Selección]
+// - En la portada empieza transparente (se ve la imagen) y al bajar se vuelve
+//   negro translúcido con desenfoque (backdrop-blur), como un vidrio esmerilado.
 export default function Header() {
-  const { usuario, esAdmin, logout } = useAuth()
+  const { usuario, esAdmin } = useAuth()
   const { carrito } = useCarrito()
+  const { pathname } = useLocation()
+  const scrollY = useScrollY()
   const [menuAbierto, setMenuAbierto] = useState(false)
-  const navigate = useNavigate()
+  // useCallback: la función es siempre "la misma" entre renders (el menú la usa en un useEffect)
+  const cerrarMenu = useCallback(() => setMenuAbierto(false), [])
 
-  const cerrarMenu = () => setMenuAbierto(false)
+  // Al cambiar de página, cerramos el menú
+  useEffect(() => setMenuAbierto(false), [pathname])
 
-  const cerrarSesion = async () => {
-    await logout()
-    cerrarMenu()
-    navigate("/")
-  }
-
-  // NavLink sabe si su ruta está activa y nos deja cambiar el estilo
-  const enlace = ({ isActive }) => `block py-2 ${isActive ? "text-white" : "text-zinc-400 hover:text-white"}`
-
-  const enlaces = (
-    <>
-      <NavLink to="/" end className={enlace} onClick={cerrarMenu}>Inicio</NavLink>
-      <NavLink to="/catalogo" className={enlace} onClick={cerrarMenu}>Catálogo</NavLink>
-      {usuario && !esAdmin && <NavLink to="/mi-cuenta" className={enlace} onClick={cerrarMenu}>Mi cuenta</NavLink>}
-      {esAdmin && <NavLink to="/admin" className={enlace} onClick={cerrarMenu}>Admin</NavLink>}
-    </>
-  )
+  const transparente = pathname === "/" && scrollY < 40
+  const enlaceCuenta = !usuario ? "/login" : esAdmin ? "/admin" : "/mi-cuenta"
+  const icono = "relative grid size-10 place-items-center rounded-full text-tinta/80 transition duration-300 hover:bg-white/5 hover:text-tinta"
 
   return (
-    <header className="sticky top-0 z-40 border-b border-borde bg-fondo/90 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
-        <Logo />
-
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">{enlaces}</nav>
-
-        <div className="flex items-center gap-2">
-          {/* El admin no compra, así que no le mostramos el carrito */}
-          {!esAdmin && (
-            <Link to="/carrito" className="relative grid size-10 place-items-center rounded-lg hover:bg-panel" aria-label="Carrito">
-              <ShoppingCart size={20} />
-              {carrito.cantidadTotal > 0 && (
-                <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-brand px-1 text-xs font-bold">
-                  {carrito.cantidadTotal}
-                </span>
-              )}
-            </Link>
-          )}
-
-          {usuario ? (
-            <div className="hidden items-center gap-2 md:flex">
-              <span className="flex items-center gap-1 text-sm text-zinc-300">
-                {esAdmin ? <LayoutDashboard size={16} /> : <User size={16} />} {usuario.nombre.split(" ")[0]}
-              </span>
-              <button onClick={cerrarSesion} className="grid size-10 place-items-center rounded-lg text-zinc-400 hover:bg-panel hover:text-white" aria-label="Cerrar sesión">
-                <LogOut size={18} />
-              </button>
-            </div>
-          ) : (
-            <Link to="/login" className="hidden rounded-lg bg-brand px-4 py-2 text-sm font-semibold hover:bg-brand-dark md:block">
-              Iniciar sesión
-            </Link>
-          )}
-
-          <button className="grid size-10 place-items-center rounded-lg hover:bg-panel md:hidden" onClick={() => setMenuAbierto(!menuAbierto)} aria-label="Menú">
-            {menuAbierto ? <X size={20} /> : <Menu size={20} />}
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-40 transition-all duration-700 ease-lujo ${
+          transparente ? "bg-transparent" : "border-b border-white/[0.06] bg-fondo/70 backdrop-blur-xl"
+        }`}
+      >
+        <div className="contenedor grid h-20 grid-cols-[1fr_auto_1fr] items-center">
+          {/* Izquierda: botón de menú con dos líneas finas */}
+          <button
+            onClick={() => setMenuAbierto(true)}
+            className="group flex w-fit items-center gap-3 text-sm tracking-wide text-tinta/90 hover:text-tinta"
+            aria-label="Abrir menú"
+            aria-expanded={menuAbierto}
+          >
+            <span className="flex w-6 flex-col gap-[7px]">
+              <span className="h-px w-6 bg-current" />
+              <span className="h-px w-4 bg-current transition-all duration-500 ease-lujo group-hover:w-6" />
+            </span>
+            <span className="hidden sm:inline">Menú</span>
           </button>
-        </div>
-      </div>
 
-      {/* Menú desplegable para celular */}
-      {menuAbierto && (
-        <nav className="border-t border-borde px-4 py-3 text-sm font-medium md:hidden">
-          {enlaces}
-          {usuario ? (
-            <button onClick={cerrarSesion} className="flex items-center gap-2 py-2 text-zinc-400"><LogOut size={16} /> Cerrar sesión</button>
-          ) : (
-            <Link to="/login" onClick={cerrarMenu} className="mt-2 block rounded-lg bg-brand px-4 py-2 text-center font-semibold">Iniciar sesión</Link>
-          )}
-        </nav>
-      )}
-    </header>
+          {/* Centro: logo */}
+          <Logo />
+
+          {/* Derecha: accesos rápidos */}
+          <nav aria-label="Accesos rápidos" className="flex items-center justify-end gap-1">
+            <Link to="/catalogo" className={`${icono} hidden sm:grid`} aria-label="Buscar en el catálogo">
+              <Search size={18} strokeWidth={1.5} />
+            </Link>
+            <Link to={enlaceCuenta} className={icono} aria-label={usuario ? "Mi cuenta" : "Iniciar sesión"}>
+              {esAdmin ? <LayoutDashboard size={18} strokeWidth={1.5} /> : <User size={18} strokeWidth={1.5} />}
+            </Link>
+            {/* El admin no compra: no ve la bolsa */}
+            {!esAdmin && (
+              <Link to="/carrito" className={icono} aria-label={`Mi selección, ${carrito.cantidadTotal} productos`}>
+                <ShoppingBag size={18} strokeWidth={1.5} />
+                {carrito.cantidadTotal > 0 && (
+                  <span className="absolute right-0.5 top-0.5 grid min-w-[18px] place-items-center rounded-full bg-brand px-1 text-[10px] font-semibold leading-[18px] text-black">
+                    {carrito.cantidadTotal}
+                  </span>
+                )}
+              </Link>
+            )}
+          </nav>
+        </div>
+      </header>
+
+      <MenuPantallaCompleta abierto={menuAbierto} onCerrar={cerrarMenu} />
+    </>
   )
 }

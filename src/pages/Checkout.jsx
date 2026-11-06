@@ -59,16 +59,17 @@ export default function Checkout() {
   // ---------- PASO 3: ÉXITO ----------
   if (paso === "exito") {
     return (
-      <div className="mx-auto max-w-lg px-4 py-16 text-center">
+      <div className="contenedor max-w-xl py-24 text-center animate-aparecer">
         <CheckCircle2 size={64} className="mx-auto text-emerald-400" />
-        <h1 className="mt-4 text-3xl font-bold">¡Pago exitoso!</h1>
+        <p className="etiqueta mt-6">Pedido confirmado</p>
+        <h1 className="mt-4 titulo-display text-4xl sm:text-5xl">Gracias por su compra</h1>
         <p className="mt-2 text-zinc-400">
           Compra #{compra.id} por <span className="font-semibold text-white">{formatoPrecio(compra.total)}</span>.
           Tus accesos ya están listos y te enviamos la confirmación a tu correo.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link to="/mi-cuenta" className="rounded-xl bg-brand px-6 py-3 font-semibold hover:bg-brand-dark">Ver mis servicios</Link>
-          <Link to="/catalogo" className="rounded-xl border border-borde px-6 py-3 font-semibold hover:bg-panel">Seguir comprando</Link>
+          <Link to="/mi-cuenta" className="boton-primario">Ver mis servicios</Link>
+          <Link to="/catalogo" className="boton-secundario">Seguir explorando</Link>
         </div>
       </div>
     )
@@ -85,16 +86,17 @@ export default function Checkout() {
   const total = paso === "pago" ? compra.total : carrito.total
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
+    <div className="contenedor max-w-3xl py-16 sm:py-20">
       <Link to="/carrito" className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-white">
         <ArrowLeft size={16} /> Volver al carrito
       </Link>
-      <h1 className="mt-4 text-3xl font-bold">{paso === "resumen" ? "Confirma tu pedido" : `Pagar pedido #${compra.id}`}</h1>
+      <p className="etiqueta mt-8">Finalizar compra</p>
+      <h1 className="mt-4 titulo-display text-4xl sm:text-5xl">{paso === "resumen" ? "Confirme su pedido" : `Pedido n.º ${compra.id}`}</h1>
 
       {/* Indicador de pasos */}
       <ol className="mt-4 flex gap-2 text-sm">
-        <li className={`rounded-full px-3 py-1 ${paso === "resumen" ? "bg-brand" : "bg-panel text-zinc-400"}`}>1. Pedido</li>
-        <li className={`rounded-full px-3 py-1 ${paso === "pago" ? "bg-brand" : "bg-panel text-zinc-400"}`}>2. Pago</li>
+        <li className={`rounded-full px-3 py-1 ${paso === "resumen" ? "bg-tinta text-black" : "border border-white/10 text-zinc-500"}`}>1. Pedido</li>
+        <li className={`rounded-full px-3 py-1 ${paso === "pago" ? "bg-tinta text-black" : "border border-white/10 text-zinc-500"}`}>2. Pago</li>
       </ol>
 
       <div className="mt-6 space-y-4">
@@ -106,8 +108,8 @@ export default function Checkout() {
         </Aviso>
 
         {/* RESUMEN DEL PEDIDO */}
-        <section className="rounded-2xl border border-borde bg-panel p-5">
-          <h2 className="font-semibold">Resumen</h2>
+        <section className="superficie p-5">
+          <h2 className="etiqueta">Resumen</h2>
           <ul className="mt-4 divide-y divide-borde">
             {lineas.map((linea) => (
               <li key={linea.id} className="flex items-center gap-3 py-3">
@@ -123,7 +125,7 @@ export default function Checkout() {
               </li>
             ))}
           </ul>
-          <div className="mt-2 flex justify-between border-t border-borde pt-4 text-lg font-bold">
+          <div className="mt-2 flex justify-between border-t border-borde pt-4 text-xl font-light">
             <span>Total</span><span>{formatoPrecio(total)}</span>
           </div>
         </section>
@@ -132,12 +134,12 @@ export default function Checkout() {
           <button
             onClick={confirmarPedido}
             disabled={enviando || !carrito.puedePagar}
-            className="w-full rounded-xl bg-brand py-3 font-semibold hover:bg-brand-dark disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400"
+            className="boton-primario w-full"
           >
             {enviando ? "Creando pedido..." : "Confirmar pedido"}
           </button>
         ) : (
-          <section className="rounded-2xl border border-borde bg-panel p-5">
+          <section className="superficie p-5">
             <h2 className="font-semibold">Método de pago</h2>
             <div className="mt-4 grid grid-cols-3 gap-3">
               {METODOS.map(({ valor, texto, icono: Icono }) => (
@@ -157,7 +159,7 @@ export default function Checkout() {
             <button
               onClick={pagar}
               disabled={enviando}
-              className="mt-5 w-full rounded-xl bg-emerald-600 py-3 font-semibold hover:bg-emerald-700 disabled:opacity-60"
+              className="boton-primario mt-5 w-full"
             >
               {enviando ? "Procesando pago..." : `Pagar ${formatoPrecio(total)}`}
             </button>
