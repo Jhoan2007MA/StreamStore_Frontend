@@ -67,7 +67,7 @@ export default function ProductoDetalle() {
       <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-20">
         {/* IMAGEN: se queda fija (sticky) mientras se lee la ficha en pantallas grandes */}
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <VisualPlataforma nombre={producto.plataforma.nombre} id={producto.plataforma.id} variante={producto.tipo} zoom="220%" className="aspect-[4/5] rounded-2xl">
+          <VisualPlataforma nombre={producto.plataforma.nombre} id={producto.plataforma.id} variante={producto.tipo} logoCentrado zoom="220%" className="aspect-[4/5] rounded-2xl">
             {producto.agotado && (
               <span className="absolute left-6 top-6 rounded-full border border-white/20 bg-black/60 px-3 py-1 text-[0.6875rem] uppercase tracking-[0.2em] backdrop-blur">Agotado</span>
             )}
