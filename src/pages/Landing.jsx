@@ -118,7 +118,7 @@ export default function Landing() {
           {MODALIDADES.map((m, i) => (
             <Revelar key={m.titulo} retraso={i * 120}>
               <Link to={m.a} className="group block">
-                <VisualPlataforma nombre={m.nombre} zoom="200%" className="flex aspect-[4/5] flex-col justify-end rounded-2xl p-7 md:aspect-[3/4.4]">
+                <VisualPlataforma nombre={m.nombre} conLogo={false} zoom="200%" className="flex aspect-[4/5] flex-col justify-end rounded-2xl p-7 md:aspect-[3/4.4]">
                   <p className="etiqueta">{m.etiqueta}</p>
                   <h3 className="titulo-display mt-3 text-3xl">{m.titulo}</h3>
                   <p className="mt-2 text-sm text-tinta/70">{m.texto}</p>
@@ -181,7 +181,7 @@ export default function Landing() {
 
       {/* ================= CIERRE ================= */}
       <section className="contenedor pt-8">
-        <VisualPlataforma nombre="Prime Video" zoom="160%" className="flex min-h-[420px] flex-col items-center justify-center rounded-2xl px-6 py-20 text-center">
+        <VisualPlataforma nombre="Prime Video" conLogo={false} zoom="160%" className="flex min-h-[420px] flex-col items-center justify-center rounded-2xl px-6 py-20 text-center">
           <p className="etiqueta">SH Vision</p>
           <h2 className="titulo-display mt-5 max-w-2xl text-4xl sm:text-6xl">Su próxima historia comienza aquí</h2>
           <Link to="/catalogo" className="boton-primario mt-10">Explorar la colección</Link>
