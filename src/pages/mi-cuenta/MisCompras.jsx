@@ -33,7 +33,7 @@ export default function MisCompras() {
       <div className="py-16 text-center">
         <Receipt size={44} className="mx-auto text-zinc-600" />
         <p className="mt-4 text-zinc-400">Todavía no has hecho compras.</p>
-        <Link to="/catalogo" className="mt-6 inline-block rounded-xl bg-brand px-6 py-3 font-semibold hover:bg-brand-dark">Ir al catálogo</Link>
+        <Link to="/catalogo" className="mt-8 boton-primario">Descubra la colección</Link>
       </div>
     )
   }
@@ -42,7 +42,7 @@ export default function MisCompras() {
     <>
       <ul className="space-y-3">
         {resultado.data.map((compra) => (
-          <li key={compra.id} className="overflow-hidden rounded-2xl border border-borde bg-panel">
+          <li key={compra.id} className="overflow-hidden superficie">
             <button
               onClick={() => setAbierta(abierta === compra.id ? null : compra.id)}
               className="flex w-full items-center gap-4 p-4 text-left hover:bg-white/5"
@@ -54,7 +54,7 @@ export default function MisCompras() {
                 </p>
               </div>
               <div className="text-right">
-                <p className="font-bold">{formatoPrecio(compra.total)}</p>
+                <p className="text-lg font-light">{formatoPrecio(compra.total)}</p>
                 <EstadoBadge estado={compra.estado} />
               </div>
               <ChevronDown size={18} className={`shrink-0 text-zinc-400 transition ${abierta === compra.id ? "rotate-180" : ""}`} />
@@ -67,9 +67,9 @@ export default function MisCompras() {
       {/* Paginación */}
       {resultado.totalPages > 1 && (
         <div className="mt-6 flex items-center justify-center gap-4 text-sm">
-          <button onClick={() => setPagina(pagina - 1)} disabled={!resultado.previousPage} className="rounded-lg border border-borde px-4 py-2 disabled:opacity-40">Anterior</button>
+          <button onClick={() => setPagina(pagina - 1)} disabled={!resultado.previousPage} className="boton-secundario px-5 py-2 text-xs">Anterior</button>
           <span className="text-zinc-400">Página {resultado.currentPage} de {resultado.totalPages}</span>
-          <button onClick={() => setPagina(pagina + 1)} disabled={!resultado.nextPage} className="rounded-lg border border-borde px-4 py-2 disabled:opacity-40">Siguiente</button>
+          <button onClick={() => setPagina(pagina + 1)} disabled={!resultado.nextPage} className="boton-secundario px-5 py-2 text-xs">Siguiente</button>
         </div>
       )}
     </>
@@ -98,7 +98,7 @@ function DetalleCompra({ id }) {
               <p className="font-medium">
                 {item.producto.plataforma.nombre} · {nombreModalidad(item.producto.tipo)}
                 {item.renovacionDe && (
-                  <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-brand/15 px-2 py-0.5 text-xs text-violet-300">
+                  <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-brand/15 px-2 py-0.5 text-xs text-brand">
                     <RefreshCw size={10} /> Renovación
                   </span>
                 )}
@@ -121,7 +121,7 @@ function DetalleCompra({ id }) {
           {compra.pagadaAt ? `Pagada el ${formatoFechaHora(compra.pagadaAt)}` : "Sin pagar"}
           {compra.metodoPago && ` · ${METODOS[compra.metodoPago] ?? compra.metodoPago}`}
         </span>
-        <span className="font-bold">Total {formatoPrecio(compra.total)}</span>
+        <span className="font-light text-lg">Total {formatoPrecio(compra.total)}</span>
       </div>
     </div>
   )

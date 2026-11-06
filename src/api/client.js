@@ -39,6 +39,9 @@ export const mensajeError = (error) => {
     if (detalles.length) return detalles.join(". ")
   }
   if (data?.error) return data.error
-  if (!error?.response) return "No hay conexión con el servidor. ¿Está encendido el backend?"
+  // Sin respuesta, o un 500/502 sin cuerpo (es lo que devuelve el proxy de Vite si el backend está apagado)
+  if (!error?.response || (error.response.status >= 500 && !data)) {
+    return "No hay conexión con el servidor. ¿Está encendido el backend?"
+  }
   return "Ocurrió un error inesperado"
 }

@@ -16,8 +16,9 @@ export default function MiCuenta() {
   const tab = params.get("tab") === "compras" ? "compras" : "servicios"
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-3xl font-bold">Hola, {usuario.nombre.split(" ")[0]}</h1>
+    <div className="contenedor max-w-6xl py-16 sm:py-20">
+      <p className="etiqueta">Mi cuenta</p>
+      <h1 className="titulo-display mt-4 text-4xl sm:text-5xl">Hola, {usuario.nombre.split(" ")[0]}</h1>
       <p className="mt-1 text-zinc-400">{usuario.correo}</p>
 
       <div className="mt-6 flex gap-2 border-b border-borde">

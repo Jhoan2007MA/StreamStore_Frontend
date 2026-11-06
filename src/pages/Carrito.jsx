@@ -34,16 +34,17 @@ export default function Carrito() {
     return (
       <div className="mx-auto max-w-md px-4 py-20 text-center">
         <ShoppingCart size={48} className="mx-auto text-zinc-600" />
-        <h1 className="mt-4 text-2xl font-bold">Tu carrito está vacío</h1>
+        <h1 className="mt-6 titulo-display text-4xl">Su selección está vacía</h1>
         <p className="mt-2 text-zinc-400">Agrega cuentas o pantallas desde el catálogo.</p>
-        <Link to="/catalogo" className="mt-6 inline-block rounded-xl bg-brand px-6 py-3 font-semibold hover:bg-brand-dark">Ir al catálogo</Link>
+        <Link to="/catalogo" className="mt-10 boton-primario">Descubra la colección</Link>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-3xl font-bold">Tu carrito</h1>
+    <div className="contenedor max-w-6xl py-16 sm:py-20">
+      <p className="etiqueta">Su selección</p>
+      <h1 className="titulo-display mt-4 text-4xl sm:text-5xl">Mi selección</h1>
       <div className="mt-4"><Aviso tipo="error">{error}</Aviso></div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
@@ -53,7 +54,7 @@ export default function Carrito() {
             const { producto } = item
             const esRenovacion = item.renovacion !== null
             return (
-              <li key={item.id} className="rounded-2xl border border-borde bg-panel p-4">
+              <li key={item.id} className="superficie p-4">
                 <div className="flex items-start gap-3">
                   <PlataformaLogo nombre={producto.plataforma.nombre} logoUrl={producto.plataforma.logoUrl} tamano="sm" />
                   <div className="min-w-0 flex-1">
@@ -70,7 +71,7 @@ export default function Carrito() {
                     </div>
 
                     {esRenovacion && (
-                      <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-brand/15 px-2 py-0.5 text-xs text-violet-300">
+                      <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-brand/15 px-2 py-0.5 text-xs text-brand">
                         <RefreshCw size={12} /> Renovación · vence {formatoFecha(item.renovacion.fechaVencimiento)}
                       </p>
                     )}
@@ -105,17 +106,17 @@ export default function Carrito() {
             )
           })}
           <li>
-            <button onClick={() => ejecutar(vaciar)} disabled={ocupado} className="text-sm text-zinc-500 hover:text-red-400">Vaciar carrito</button>
+            <button onClick={() => ejecutar(vaciar)} disabled={ocupado} className="text-sm text-zinc-500 hover:text-red-400">Vaciar selección</button>
           </li>
         </ul>
 
         {/* RESUMEN */}
-        <aside className="h-fit rounded-2xl border border-borde bg-panel p-5 lg:sticky lg:top-24">
-          <h2 className="font-semibold">Resumen</h2>
+        <aside className="h-fit superficie p-5 lg:sticky lg:top-24">
+          <h2 className="etiqueta">Resumen</h2>
           <div className="mt-4 flex justify-between text-sm text-zinc-400">
             <span>Productos</span><span>{carrito.cantidadTotal}</span>
           </div>
-          <div className="mt-3 flex justify-between border-t border-borde pt-3 text-lg font-bold">
+          <div className="mt-3 flex justify-between border-t border-borde pt-3 text-xl font-light">
             <span>Total</span><span>{formatoPrecio(carrito.total)}</span>
           </div>
           {!carrito.puedePagar && (
@@ -124,11 +125,11 @@ export default function Carrito() {
           <button
             onClick={() => navigate("/checkout")}
             disabled={!carrito.puedePagar || ocupado}
-            className="mt-5 w-full rounded-xl bg-brand py-3 font-semibold hover:bg-brand-dark disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400"
+            className="boton-primario mt-5 w-full"
           >
-            Ir a pagar
+            Continuar al pago
           </button>
-          <Link to="/catalogo" className="mt-3 block text-center text-sm text-zinc-400 hover:text-white">Seguir comprando</Link>
+          <Link to="/catalogo" className="mt-5 block text-center text-sm text-suave hover:text-tinta">Seguir explorando</Link>
         </aside>
       </div>
     </div>

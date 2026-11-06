@@ -1,20 +1,12 @@
-// La base de datos no trae logos, así que dibujamos un cuadro de color con la inicial.
-// No usamos logos oficiales: la marca debe ser propia.
-const COLORES = {
-  netflix: "from-red-600 to-red-800",
-  "disney+": "from-blue-600 to-indigo-800",
-  "prime video": "from-sky-500 to-sky-700",
-  max: "from-violet-600 to-blue-800"
-}
-
+// Monograma de la plataforma: cuadro oscuro con borde fino y la inicial en dorado.
+// Antes eran cuadros de colores; en una estética sobria es mejor que todos se vean iguales.
 export default function PlataformaLogo({ nombre, logoUrl, tamano = "md" }) {
-  const medidas = { sm: "size-9 text-sm", md: "size-12 text-lg", lg: "size-16 text-2xl" }[tamano]
+  const medidas = { sm: "size-10 text-base", md: "size-12 text-lg", lg: "size-16 text-2xl" }[tamano]
   if (logoUrl) {
     return <img src={logoUrl} alt={nombre} className={`${medidas} rounded-xl object-cover`} />
   }
-  const color = COLORES[nombre?.toLowerCase()] ?? "from-zinc-600 to-zinc-800"
   return (
-    <div className={`${medidas} shrink-0 rounded-xl bg-gradient-to-br ${color} grid place-items-center font-bold text-white`}>
+    <div className={`${medidas} grid shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.03] font-light text-brand`}>
       {nombre?.charAt(0)}
     </div>
   )

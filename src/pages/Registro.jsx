@@ -60,13 +60,13 @@ export default function Registro() {
         <CampoTexto etiqueta="Teléfono (opcional)" name="telefono" type="tel" autoComplete="tel" value={form.telefono} onChange={cambiar} error={errores.telefono} />
         <CampoTexto etiqueta="Contraseña" name="contrasena" type="password" autoComplete="new-password" value={form.contrasena} onChange={cambiar} error={errores.contrasena} />
         <CampoTexto etiqueta="Confirmar contraseña" name="confirmar" type="password" autoComplete="new-password" value={form.confirmar} onChange={cambiar} error={errores.confirmar} />
-        <button disabled={enviando} className="w-full rounded-xl bg-brand py-3 font-semibold hover:bg-brand-dark disabled:opacity-60">
+        <button disabled={enviando} className="boton-primario w-full">
           {enviando ? "Creando cuenta..." : "Crear cuenta"}
         </button>
       </form>
       <p className="mt-6 text-center text-sm text-zinc-400">
         ¿Ya tienes cuenta?{" "}
-        <Link to="/login" state={{ desde }} className="font-semibold text-brand hover:underline">Inicia sesión</Link>
+        <Link to="/login" state={{ desde }} className="enlace-linea text-brand">Inicia sesión</Link>
       </p>
     </TarjetaFormulario>
   )
