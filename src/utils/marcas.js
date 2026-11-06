@@ -2,7 +2,6 @@
 // "video" = clip propio que se reproduce al pasar el cursor (public/plataformas/videos).
 // "videoDesde" / "videoHasta" = opcionales: tramo del clip que se repite (para saltar partes vacías).
 // "videoEstilo" = opcional: tamaño/posición del video en la tarjeta si el recorte por defecto corta el logo.
-// "youtube" = id de un video de YouTube para lo mismo (se incrusta, no se descarga). Si hay ambos, gana "video".
 // "blanco" = el logo original es oscuro, así que se pinta en blanco para que se vea sobre el fondo.
 const MARCAS = {
   netflix: {

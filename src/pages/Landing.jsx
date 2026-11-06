@@ -8,27 +8,51 @@ import VisualPlataforma from "../components/VisualPlataforma"
 import { useScrollY } from "../hooks/useScrollY"
 import { formatoPrecio } from "../utils/formato"
 
+// trailer: video que se reproduce al pasar el cursor (public/trailers). Si no existe, queda la imagen.
+// compraDe: si el tráiler es de una plataforma, la tarjeta lleva directo a sus productos en el catálogo.
+//   Puede ser un nombre o una lista de nombres posibles (por si en el backend se llama distinto).
 const MODALIDADES = [
   {
     etiqueta: "Exclusividad total",
     titulo: "Cuenta completa",
     texto: "Todos los perfiles, solo para usted y los suyos.",
     a: "/catalogo?tipo=cuenta",
-    nombre: "Max"
+    nombre: "Max",
+    trailer: "/trailers/MadMaxhbo.mp4",
+    trailerSiempre: true,
+    trailerZoom: 1.35, // el video trae franjas negras arriba y abajo: se amplía para quitarlas
+    compraDe: ["Max", "HBO Max", "HBO"]
   },
   {
     etiqueta: "A su medida",
     titulo: "Pantalla individual",
     texto: "Un perfil propio, con su PIN personal.",
     a: "/catalogo?tipo=pantalla",
-    nombre: "Netflix"
+    nombre: "Netflix",
+    trailer: "/trailers/CasaDePaoel.mp4",
+    trailerSiempre: true,
+    compraDe: "Netflix"
   },
   {
     etiqueta: "Tranquilidad",
     titulo: "Siempre a tiempo",
     texto: "Le avisamos 3 días antes, 1 día antes y el día del vencimiento.",
     a: "/#como-funciona",
-    nombre: "Disney+"
+    nombre: "Disney+",
+    trailer: "/trailers/DisneyPlus.mp4",
+    trailerSiempre: true,
+    compraDe: ["Disney+", "Disney Plus", "Disney"]
+  },
+  {
+    etiqueta: "Sin esperas",
+    titulo: "Entrega inmediata",
+    texto: "Sus accesos llegan en el instante en que se confirma el pago.",
+    a: "/catalogo",
+    nombre: "Prime Video",
+    trailer: "/trailers/ApocalipsisZ.mp4",
+    trailerSiempre: true,
+    trailerZoom: 1.35, // también trae franjas negras arriba y abajo
+    compraDe: ["Prime Video", "Amazon Prime Video", "Amazon Prime", "Prime"]
   }
 ]
 
@@ -51,6 +75,14 @@ const PREGUNTAS = [
   { p: "¿Puedo renovar?", r: "Sí. Desde Mis servicios añade la renovación a su selección y conserva la misma cuenta o pantalla." },
   { p: "¿Qué ocurre si un producto está agotado?", r: "Se indica con la etiqueta Agotado y vuelve a estar disponible en cuanto incorporamos nuevo inventario." }
 ]
+
+// Busca la plataforma por nombre (los ids vienen del backend); mientras cargan, se usa el enlace general.
+function enlaceModalidad(m, plataformas) {
+  if (!m.compraDe) return m.a
+  const nombres = [m.compraDe].flat().map((n) => n.toLowerCase())
+  const plataforma = plataformas.find((p) => nombres.includes(p.nombre.toLowerCase()))
+  return plataforma ? `/catalogo?plataforma=${plataforma.id}` : m.a
+}
 
 export default function Landing() {
   const [plataformas, setPlataformas] = useState([])
@@ -88,6 +120,7 @@ export default function Landing() {
       <Carrusel
         etiqueta="La colección"
         titulo="Plataformas"
+        pegado
         accion={<Link to="/catalogo" className="enlace-linea hidden text-tinta/80 hover:text-tinta sm:inline-flex">Ver todo <ArrowRight size={14} /></Link>}
       >
         {plataformas.map((plataforma) => (
@@ -96,7 +129,8 @@ export default function Landing() {
             to={`/catalogo?plataforma=${plataforma.id}`}
             className="group w-[78%] shrink-0 snap-start sm:w-[44%] lg:w-[calc((100%-4.5rem)/4)] lg:min-w-[280px]"
           >
-            <VisualPlataforma nombre={plataforma.nombre} id={plataforma.id} className="flex aspect-[3/4] flex-col justify-end rounded-2xl p-7">
+            {/* Tarjetas altas: en computador casi del alto de la pantalla */}
+            <VisualPlataforma nombre={plataforma.nombre} id={plataforma.id} className="flex aspect-[3/4] flex-col justify-end rounded-2xl p-7 lg:aspect-auto lg:h-[min(78vh,52rem)] lg:min-h-[34rem]">
               {preciosDesde[plataforma.id] !== undefined && (
                 <p className="etiqueta">Desde {formatoPrecio(preciosDesde[plataforma.id])}</p>
               )}
@@ -114,16 +148,23 @@ export default function Landing() {
           <p className="etiqueta mb-4">Su forma de ver</p>
           <h2 className="titulo-display text-4xl sm:text-5xl">Elija cómo vivir cada historia</h2>
         </Revelar>
-        <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
+        {/* 2 columnas en tablet y laptop pequeño; 4 desde 1280 px. En pantallas anchas la cuadrícula
+            sale un poco del contenedor (el título queda alineado) para que las tarjetas crezcan algo */}
+        <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4 min-[1440px]:-mx-16 min-[1600px]:-mx-28">
           {MODALIDADES.map((m, i) => (
-            <Revelar key={m.titulo} retraso={i * 120}>
-              <Link to={m.a} className="group block">
-                <VisualPlataforma nombre={m.nombre} conLogo={false} zoom="200%" className="flex aspect-[4/5] flex-col justify-end rounded-2xl p-7 md:aspect-[3/4.4]">
+            <Revelar key={m.titulo} retraso={i * 120} className="h-full">
+              {/* Tarjeta tipo "póster": arriba el tráiler en 16:9 (su formato, sin recortes) y abajo el texto */}
+              <Link
+                to={enlaceModalidad(m, plataformas)}
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-borde bg-panel transition-colors duration-500 ease-lujo hover:border-tinta/25"
+              >
+                <VisualPlataforma nombre={m.nombre} conLogo={false} video={m.trailer} videoSiempre={m.trailerSiempre} videoZoom={m.trailerZoom} zoom="200%" className="aspect-video" />
+                <div className="flex flex-1 flex-col items-center p-6 text-center sm:p-7">
                   <p className="etiqueta">{m.etiqueta}</p>
                   <h3 className="titulo-display mt-3 text-3xl">{m.titulo}</h3>
                   <p className="mt-2 text-sm text-tinta/70">{m.texto}</p>
-                  <span className="enlace-linea mt-6 w-fit text-tinta">Descubra más</span>
-                </VisualPlataforma>
+                  <span className="enlace-linea mt-auto w-fit pt-6 text-tinta">Descubra más</span>
+                </div>
               </Link>
             </Revelar>
           ))}
