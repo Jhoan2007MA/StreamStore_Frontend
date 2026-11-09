@@ -16,6 +16,7 @@ import MiCuenta from "./pages/MiCuenta"
 import NoEncontrada from "./pages/NoEncontrada"
 import ProductoDetalle from "./pages/ProductoDetalle"
 import Registro from "./pages/Registro"
+import VerificarCorreo from "./pages/VerificarCorreo"
 
 // Mapa de la aplicación: qué página se muestra en cada dirección (URL).
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
         <Route path="/productos/:id" element={<ProductoDetalle />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
+        <Route path="/verificar-correo" element={<VerificarCorreo />} />
 
         {/* Solo clientes con sesión */}
         <Route element={<RutaProtegida rol="cliente" />}>

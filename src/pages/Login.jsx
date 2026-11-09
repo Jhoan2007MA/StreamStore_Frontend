@@ -34,6 +34,14 @@ export default function Login() {
       const entroComoAdmin = [1, 2].includes(user.rolId)
       navigate(desde ?? (entroComoAdmin ? "/admin" : "/catalogo"), { replace: true })
     } catch (err) {
+      // Contraseña correcta pero el correo aún no está verificado: lo llevamos a escribir el código
+      const pendiente = err?.response?.data?.data
+      if (err?.response?.status === 403 && pendiente?.verificado === false) {
+        navigate(`/verificar-correo?correo=${encodeURIComponent(pendiente.correo)}`, {
+          state: { desde, aviso: "Debes verificar tu correo antes de iniciar sesión. Si no tienes el código, pide uno nuevo." }
+        })
+        return
+      }
       setError(mensajeError(err))
     } finally {
       setEnviando(false)
