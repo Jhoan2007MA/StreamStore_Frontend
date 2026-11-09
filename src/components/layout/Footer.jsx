@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { useAuth } from "../../context/AuthContext"
 import Logo from "./Logo"
 
 const COLUMNAS = [
@@ -28,13 +29,15 @@ const COLUMNAS = [
 ]
 
 export default function Footer() {
+  // El admin no compra: no le mostramos los enlaces de la tienda
+  const { esAdmin } = useAuth()
   return (
     <footer className="mt-32 border-t border-white/[0.06] bg-fondo">
       <div className="contenedor py-16">
-        <div className="flex justify-center pb-14">
+        <div className={`flex justify-center ${esAdmin ? "" : "pb-14"}`}>
           <Logo />
         </div>
-        <div className="grid gap-10 border-t border-white/[0.06] pt-12 sm:grid-cols-3">
+        {!esAdmin && <div className="grid gap-10 border-t border-white/[0.06] pt-12 sm:grid-cols-3">
           {COLUMNAS.map((columna) => (
             <div key={columna.titulo}>
               <h2 className="etiqueta mb-5">{columna.titulo}</h2>
@@ -47,7 +50,7 @@ export default function Footer() {
               </ul>
             </div>
           ))}
-        </div>
+        </div>}
       </div>
       <div className="border-t border-white/[0.06]">
         <div className="contenedor flex flex-col gap-2 py-6 text-xs text-zinc-500 sm:flex-row sm:justify-between">

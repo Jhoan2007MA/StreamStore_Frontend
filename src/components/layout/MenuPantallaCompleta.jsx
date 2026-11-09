@@ -20,14 +20,14 @@ export default function MenuPantallaCompleta({ abierto, onCerrar }) {
     }
   }, [abierto, onCerrar])
 
-  const enlaces = [
+  // El admin no compra: solo ve su panel. Los demás ven la tienda.
+  const enlaces = esAdmin ? [{ a: "/admin", texto: "Administración" }] : [
     { a: "/", texto: "Inicio" },
     { a: "/catalogo", texto: "Colección" },
     { a: "/catalogo?tipo=cuenta", texto: "Cuentas completas" },
     { a: "/catalogo?tipo=pantalla", texto: "Pantallas" },
-    usuario && !esAdmin && { a: "/mi-cuenta", texto: "Mis servicios" },
-    usuario && !esAdmin && { a: "/mi-cuenta?tab=compras", texto: "Mis compras" },
-    esAdmin && { a: "/admin", texto: "Administración" }
+    usuario && { a: "/mi-cuenta", texto: "Mis servicios" },
+    usuario && { a: "/mi-cuenta?tab=compras", texto: "Mis compras" }
   ].filter(Boolean)
 
   const cerrarSesion = async () => {
@@ -88,12 +88,12 @@ export default function MenuPantallaCompleta({ abierto, onCerrar }) {
                   <Link to="/registro" onClick={onCerrar} className="enlace-linea text-suave hover:text-tinta">Crear una cuenta</Link>
                 </div>
               )}
-              <div>
+              {!esAdmin && <div>
                 <p className="etiqueta mb-2">Asistencia</p>
                 <a href={`https://wa.me/${import.meta.env.VITE_WHATSAPP ?? "573001234567"}`} target="_blank" rel="noreferrer" className="enlace-linea text-suave hover:text-tinta">
                   Hablar con un asesor <ArrowUpRight size={14} />
                 </a>
-              </div>
+              </div>}
             </aside>
           )}
         </div>

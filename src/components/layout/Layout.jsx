@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from "react-router-dom"
+import { useAuth } from "../../context/AuthContext"
 import ControlScroll from "./ControlScroll"
 import Footer from "./Footer"
 import Header from "./Header"
@@ -7,6 +8,7 @@ import WhatsAppButton from "./WhatsAppButton"
 // Marco común de todas las páginas. <Outlet /> es el hueco donde se pinta la página actual.
 export default function Layout() {
   const { pathname } = useLocation()
+  const { esAdmin } = useAuth()
   const esInicio = pathname === "/"
 
   return (
@@ -26,7 +28,8 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
-      <WhatsAppButton />
+      {/* El asesor de WhatsApp es para compradores, no para el admin */}
+      {!esAdmin && <WhatsAppButton />}
     </div>
   )
 }

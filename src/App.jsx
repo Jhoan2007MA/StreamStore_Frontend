@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 import Layout from "./components/layout/Layout"
 import RutaProtegida from "./components/RutaProtegida"
+import RutaTienda from "./components/RutaTienda"
 import Carrito from "./pages/Carrito"
 import Catalogo from "./pages/Catalogo"
 import Checkout from "./pages/Checkout"
@@ -23,10 +24,12 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        {/* Públicas */}
-        <Route path="/" element={<Landing />} />
-        <Route path="/catalogo" element={<Catalogo />} />
-        <Route path="/productos/:id" element={<ProductoDetalle />} />
+        {/* Públicas de la tienda (el admin no las ve: se le manda a su panel) */}
+        <Route element={<RutaTienda />}>
+          <Route path="/" element={<Landing />} />
+          <Route path="/catalogo" element={<Catalogo />} />
+          <Route path="/productos/:id" element={<ProductoDetalle />} />
+        </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/verificar-correo" element={<VerificarCorreo />} />
