@@ -26,11 +26,17 @@ export function AuthProvider({ children }) {
     return user
   }
 
-  const registro = async (form) => {
-    const { user } = await authApi.registro(form)
+  // Crea la cuenta pero NO inicia sesión: primero hay que verificar el correo con el código
+  const registro = (form) => authApi.registro(form)
+
+  // Valida el código del correo; si es correcto el backend inicia la sesión
+  const verificar = async (correo, codigo) => {
+    const { user } = await authApi.verificar(correo, codigo)
     setUsuario(user)
     return user
   }
+
+  const reenviarCodigo = (correo) => authApi.reenviarCodigo(correo)
 
   const logout = async () => {
     await authApi.logout().catch(() => {})
@@ -41,7 +47,7 @@ export function AuthProvider({ children }) {
   const esCliente = usuario ? usuario.rolId === 3 : false
 
   return (
-    <AuthContext.Provider value={{ usuario, cargando, esAdmin, esCliente, login, registro, logout }}>
+    <AuthContext.Provider value={{ usuario, cargando, esAdmin, esCliente, login, registro, verificar, reenviarCodigo, logout }}>
       {children}
     </AuthContext.Provider>
   )

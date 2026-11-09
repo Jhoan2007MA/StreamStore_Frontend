@@ -42,9 +42,21 @@ export default function Registro() {
     try {
       // El teléfono es opcional: si está vacío no lo mandamos
       const { confirmar, telefono, ...datos } = form
-      await registro(telefono ? { ...datos, telefono } : datos)
-      navigate(desde ?? "/catalogo", { replace: true })
+      const { correo } = await registro(telefono ? { ...datos, telefono } : datos)
+      // La cuenta queda pendiente: lo llevamos a escribir el código que le llegó al correo
+      navigate(`/verificar-correo?correo=${encodeURIComponent(correo)}`, {
+        replace: true,
+        state: { desde, codigoEnviado: true, aviso: "Cuenta creada. Revisa tu correo y escribe el código de verificación." }
+      })
     } catch (err) {
+      // El correo ya estaba registrado pero sin verificar: lo mandamos a verificarlo
+      const pendiente = err?.response?.data?.data
+      if (pendiente?.verificado === false) {
+        navigate(`/verificar-correo?correo=${encodeURIComponent(pendiente.correo)}`, {
+          state: { desde, aviso: "Ya tienes una cuenta pendiente de verificación. Pide un código nuevo si no tienes uno." }
+        })
+        return
+      }
       setError(mensajeError(err))
     } finally {
       setEnviando(false)

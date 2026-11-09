@@ -14,11 +14,11 @@ export function TarjetaFormulario({ titulo, subtitulo, children }) {
 }
 
 // Un campo con su etiqueta y, si hay, el mensaje de error debajo
-export function CampoTexto({ etiqueta, error, ...props }) {
+export function CampoTexto({ etiqueta, error, className = "", ...props }) {
   return (
     <label className="block">
       <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-zinc-500">{etiqueta}</span>
-      <input {...props} aria-invalid={Boolean(error)} className={`campo ${error ? "border-red-500/60" : ""}`} />
+      <input {...props} aria-invalid={Boolean(error)} className={`campo ${className} ${error ? "border-red-500/60" : ""}`} />
       {error && <span className="mt-1.5 block text-xs text-red-300">{error}</span>}
     </label>
   )

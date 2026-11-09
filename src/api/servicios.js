@@ -7,7 +7,11 @@ const datos = (promesa) => promesa.then((r) => r.data.data)
 
 export const authApi = {
   login: (correo, contrasena) => datos(api.post("/auth/login", { correo, contrasena })),
+  // El registro ya no inicia sesión: devuelve { correo, verificado: false } y el backend envía un código al correo
   registro: (form) => datos(api.post("/auth/register", form)),
+  // Si el código es correcto, el backend deja la sesión iniciada y devuelve { accessToken, user }
+  verificar: (correo, codigo) => datos(api.post("/auth/verificar", { correo, codigo })),
+  reenviarCodigo: (correo) => api.post("/auth/reenviar-codigo", { correo }).then((r) => r.data.message),
   yo: () => datos(api.get("/auth/me")),
   logout: () => api.post("/auth/logout"),
   recuperar: (correo) => api.post("/auth/recuperar", { correo }).then((r) => r.data.message),
