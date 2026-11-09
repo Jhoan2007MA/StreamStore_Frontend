@@ -16,7 +16,9 @@ import Login from "./pages/Login"
 import MiCuenta from "./pages/MiCuenta"
 import NoEncontrada from "./pages/NoEncontrada"
 import ProductoDetalle from "./pages/ProductoDetalle"
+import RecuperarContrasena from "./pages/RecuperarContrasena"
 import Registro from "./pages/Registro"
+import RestablecerContrasena from "./pages/RestablecerContrasena"
 import VerificarCorreo from "./pages/VerificarCorreo"
 
 // Mapa de la aplicación: qué página se muestra en cada dirección (URL).
@@ -33,6 +35,8 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/verificar-correo" element={<VerificarCorreo />} />
+        <Route path="/recuperar-contrasena" element={<RecuperarContrasena />} />
+        <Route path="/restablecer-contrasena" element={<RestablecerContrasena />} />
 
         {/* Solo clientes con sesión */}
         <Route element={<RutaProtegida rol="cliente" />}>

@@ -51,9 +51,14 @@ export default function Login() {
   return (
     <TarjetaFormulario titulo="Iniciar sesión" subtitulo="Entra para comprar y ver tus servicios">
       <form onSubmit={enviar} className="space-y-4" noValidate>
+        {/* Mensaje que llega de otra página, ej. "Tu contraseña fue actualizada" */}
+        {!error && <Aviso tipo="exito">{location.state?.aviso}</Aviso>}
         <Aviso tipo="error">{error}</Aviso>
         <CampoTexto etiqueta="Correo" name="correo" type="email" autoComplete="email" value={form.correo} onChange={cambiar} />
         <CampoTexto etiqueta="Contraseña" name="contrasena" type="password" autoComplete="current-password" value={form.contrasena} onChange={cambiar} />
+        <div className="text-right">
+          <Link to="/recuperar-contrasena" className="enlace-linea text-xs text-suave hover:text-tinta">¿Olvidaste tu contraseña?</Link>
+        </div>
         <button disabled={enviando} className="boton-primario w-full">
           {enviando ? "Entrando..." : "Entrar"}
         </button>
