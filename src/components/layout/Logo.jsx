@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom"
+import { useAuth } from "../../context/AuthContext"
 
 // Logotipo tipográfico: sin íconos, solo letras con mucho espacio entre ellas.
 // Las marcas de lujo usan su nombre como logo: transmite seguridad.
 export default function Logo({ className = "" }) {
+  // El admin no usa la tienda: el logo lo lleva a su panel
+  const { esAdmin } = useAuth()
   return (
-    <Link to="/" aria-label="SH Vision, ir al inicio" className={`group inline-flex flex-col items-center leading-none ${className}`}>
+    <Link to={esAdmin ? "/admin" : "/"} aria-label={esAdmin ? "SH Vision, ir al panel de control" : "SH Vision, ir al inicio"} className={`group inline-flex flex-col items-center leading-none ${className}`}>
       <span className="text-[1.05rem] tracking-[0.42em] text-tinta sm:text-lg">
         <span className="font-semibold">SH</span>
         <span className="ml-[0.42em] font-light">VISION</span>

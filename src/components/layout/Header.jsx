@@ -1,4 +1,4 @@
-import { LayoutDashboard, Search, ShoppingBag, User } from "lucide-react"
+import { Search, ShoppingBag, User } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
@@ -23,7 +23,7 @@ export default function Header() {
   useEffect(() => setMenuAbierto(false), [pathname])
 
   const transparente = pathname === "/" && scrollY < 40
-  const enlaceCuenta = !usuario ? "/login" : esAdmin ? "/admin" : "/mi-cuenta"
+  const enlaceCuenta = usuario ? "/mi-cuenta" : "/login"
   const icono = "relative grid size-10 place-items-center rounded-full text-tinta/80 transition duration-300 hover:bg-white/5 hover:text-tinta"
 
   return (
@@ -54,12 +54,18 @@ export default function Header() {
 
           {/* Derecha: accesos rápidos */}
           <nav aria-label="Accesos rápidos" className="flex items-center justify-end gap-1">
-            <Link to="/catalogo" className={`${icono} hidden sm:grid`} aria-label="Buscar en el catálogo">
-              <Search size={18} strokeWidth={1.5} />
-            </Link>
-            <Link to={enlaceCuenta} className={icono} aria-label={usuario ? "Mi cuenta" : "Iniciar sesión"}>
-              {esAdmin ? <LayoutDashboard size={18} strokeWidth={1.5} /> : <User size={18} strokeWidth={1.5} />}
-            </Link>
+            {/* El admin no compra: no ve la búsqueda del catálogo */}
+            {!esAdmin && (
+              <Link to="/catalogo" className={`${icono} hidden sm:grid`} aria-label="Buscar en el catálogo">
+                <Search size={18} strokeWidth={1.5} />
+              </Link>
+            )}
+            {/* El admin ya está en su panel: no necesita el acceso rápido a él */}
+            {!esAdmin && (
+              <Link to={enlaceCuenta} className={icono} aria-label={usuario ? "Mi cuenta" : "Iniciar sesión"}>
+                <User size={18} strokeWidth={1.5} />
+              </Link>
+            )}
             {/* El admin no compra: no ve la bolsa */}
             {!esAdmin && (
               <Link to="/carrito" className={icono} aria-label={`Mi selección, ${carrito.cantidadTotal} productos`}>
